@@ -1,0 +1,19 @@
+:root {
+	--task-primary-bg-color: rgb(70, 70, 70);
+	--task-secondary-bg-color: rgb(45, 45, 45);
+}
+
+.task-card {
+	border: 1px solid gray;
+	background-color: var(--task-primary-bg-color);
+}
+
+.task-card-header {
+	border: 1px solid gray;
+	background-color: var(--task-secondary-bg-color);
+}
+
+#company-view {
+	border: 1px solid gray;
+	background-color: var(--task-primary-bg-color);
+}

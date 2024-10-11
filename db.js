@@ -1,5 +1,5 @@
 const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('./timesheet.db');
+const db = new sqlite3.Database('./data.db');
 
 db.serialize(() => {
   db.run(`CREATE TABLE IF NOT EXISTS Timesheet (
@@ -33,8 +33,9 @@ db.serialize(() => {
   db.run(`CREATE TABLE IF NOT EXISTS Company (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     CompanyIdent TEXT,
-    Kategory TEXT,
-    SubCategory TEXT
+    Category TEXT,
+    SubCategory TEXT,
+    Ident TEXT
   )`);
 });
 

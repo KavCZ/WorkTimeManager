@@ -1,8 +1,14 @@
 const express = require('express');
 const db = require('./db');
 const app = express();
+const cors = require('cors'); 
 
 app.use(express.json());
+
+app.use(cors({
+  origin: 'http://127.0.0.1:5500',  // Povolit přístup z této adresy
+  credentials: true                  // Pokud potřebuješ sdílet cookies, nastav credentials
+}));
 
 // --- Timesheet Endpoints ---
 
@@ -32,9 +38,9 @@ app.get('/timesheets', (req, res) => {
 });
 
 app.post('/timesheets', (req, res) => {
-  const { subject, CompanyIdent, Kategory, SubCategory, WorkTimeFormatted, ActivityDateFrom, ActivityDateTo, Description } = req.body;
-  db.run(`INSERT INTO Timesheet (subject, CompanyIdent, Kategory, SubCategory, WorkTimeFormatted, ActivityDateFrom, ActivityDateTo, Description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-    [subject, CompanyIdent, Kategory, SubCategory, WorkTimeFormatted, ActivityDateFrom, ActivityDateTo, Description],
+  const { subject, CompanyIdent, Category, SubCategory, WorkTimeFormatted, ActivityDateFrom, ActivityDateTo, Description } = req.body;
+  db.run(`INSERT INTO Timesheet (subject, CompanyIdent, Category, SubCategory, WorkTimeFormatted, ActivityDateFrom, ActivityDateTo, Description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    [subject, CompanyIdent, Category, SubCategory, WorkTimeFormatted, ActivityDateFrom, ActivityDateTo, Description],
     function(err) {
       if (err) {
         return res.status(500).json({ error: err.message });
@@ -45,9 +51,9 @@ app.post('/timesheets', (req, res) => {
 });
 
 app.put('/timesheets/:id', (req, res) => {
-  const { subject, CompanyIdent, Kategory, SubCategory, WorkTimeFormatted, ActivityDateFrom, ActivityDateTo, Description } = req.body;
-  db.run(`UPDATE Timesheet SET subject = ?, CompanyIdent = ?, Kategory = ?, SubCategory = ?, WorkTimeFormatted = ?, ActivityDateFrom = ?, ActivityDateTo = ?, Description = ? WHERE id = ?`,
-    [subject, CompanyIdent, Kategory, SubCategory, WorkTimeFormatted, ActivityDateFrom, ActivityDateTo, Description, req.params.id],
+  const { subject, CompanyIdent, Category, SubCategory, WorkTimeFormatted, ActivityDateFrom, ActivityDateTo, Description } = req.body;
+  db.run(`UPDATE Timesheet SET subject = ?, CompanyIdent = ?, Category = ?, SubCategory = ?, WorkTimeFormatted = ?, ActivityDateFrom = ?, ActivityDateTo = ?, Description = ? WHERE id = ?`,
+    [subject, CompanyIdent, Category, SubCategory, WorkTimeFormatted, ActivityDateFrom, ActivityDateTo, Description, req.params.id],
     function(err) {
       if (err) {
         return res.status(500).json({ error: err.message });
@@ -97,9 +103,9 @@ app.get('/tasksheets', (req, res) => {
 });
 
 app.post('/tasksheets', (req, res) => {
-  const { subject, CompanyIdent, Kategory, SubCategory, WorkTimeFormatted, ActivityDateFrom, ActivityDateTo, Description, BeginTaskTime, EndTaskTime, IsForAchieved, IsArchieved } = req.body;
-  db.run(`INSERT INTO Tasksheet (subject, CompanyIdent, Kategory, SubCategory, WorkTimeFormatted, ActivityDateFrom, ActivityDateTo, Description, BeginTaskTime, EndTaskTime, IsForAchieved, IsArchieved) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [subject, CompanyIdent, Kategory, SubCategory, WorkTimeFormatted, ActivityDateFrom, ActivityDateTo, Description, BeginTaskTime, EndTaskTime, IsForAchieved, IsArchieved],
+  const { subject, CompanyIdent, Category, SubCategory, WorkTimeFormatted, ActivityDateFrom, ActivityDateTo, Description, BeginTaskTime, EndTaskTime, IsForAchieved, IsArchieved } = req.body;
+  db.run(`INSERT INTO Tasksheet (subject, CompanyIdent, Category, SubCategory, WorkTimeFormatted, ActivityDateFrom, ActivityDateTo, Description, BeginTaskTime, EndTaskTime, IsForAchieved, IsArchieved) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [subject, CompanyIdent, Category, SubCategory, WorkTimeFormatted, ActivityDateFrom, ActivityDateTo, Description, BeginTaskTime, EndTaskTime, IsForAchieved, IsArchieved],
     function(err) {
       if (err) {
         return res.status(500).json({ error: err.message });
@@ -110,9 +116,9 @@ app.post('/tasksheets', (req, res) => {
 });
 
 app.put('/tasksheets/:id', (req, res) => {
-  const { subject, CompanyIdent, Kategory, SubCategory, WorkTimeFormatted, ActivityDateFrom, ActivityDateTo, Description, BeginTaskTime, EndTaskTime, IsForAchieved, IsArchieved } = req.body;
-  db.run(`UPDATE Tasksheet SET subject = ?, CompanyIdent = ?, Kategory = ?, SubCategory = ?, WorkTimeFormatted = ?, ActivityDateFrom = ?, ActivityDateTo = ?, Description = ?, BeginTaskTime = ?, EndTaskTime = ?, IsForAchieved = ?, IsArchieved = ? WHERE id = ?`,
-    [subject, CompanyIdent, Kategory, SubCategory, WorkTimeFormatted, ActivityDateFrom, ActivityDateTo, Description, BeginTaskTime, EndTaskTime, IsForAchieved, IsArchieved, req.params.id],
+  const { subject, CompanyIdent, Category, SubCategory, WorkTimeFormatted, ActivityDateFrom, ActivityDateTo, Description, BeginTaskTime, EndTaskTime, IsForAchieved, IsArchieved } = req.body;
+  db.run(`UPDATE Tasksheet SET subject = ?, CompanyIdent = ?, Category = ?, SubCategory = ?, WorkTimeFormatted = ?, ActivityDateFrom = ?, ActivityDateTo = ?, Description = ?, BeginTaskTime = ?, EndTaskTime = ?, IsForAchieved = ?, IsArchieved = ? WHERE id = ?`,
+    [subject, CompanyIdent, Category, SubCategory, WorkTimeFormatted, ActivityDateFrom, ActivityDateTo, Description, BeginTaskTime, EndTaskTime, IsForAchieved, IsArchieved, req.params.id],
     function(err) {
       if (err) {
         return res.status(500).json({ error: err.message });
@@ -162,9 +168,10 @@ app.get('/companies', (req, res) => {
 });
 
 app.post('/companies', (req, res) => {
-  const { CompanyIdent, Kategory, SubCategory } = req.body;
-  db.run(`INSERT INTO Company (CompanyIdent, Kategory, SubCategory) VALUES (?, ?, ?)`,
-    [CompanyIdent, Kategory, SubCategory],
+  const { CompanyIdent, Category, SubCategory, Ident } = req.body;
+
+  db.run(`INSERT INTO Company (Ident, CompanyIdent, Category, SubCategory) VALUES (?, ?, ?, ?)`,
+    [Ident, CompanyIdent, Category, SubCategory], // Opravený pořádek
     function(err) {
       if (err) {
         return res.status(500).json({ error: err.message });
@@ -174,10 +181,11 @@ app.post('/companies', (req, res) => {
   );
 });
 
+
 app.put('/companies/:id', (req, res) => {
-  const { CompanyIdent, Kategory, SubCategory } = req.body;
-  db.run(`UPDATE Company SET CompanyIdent = ?, Kategory = ?, SubCategory = ? WHERE id = ?`,
-    [CompanyIdent, Kategory, SubCategory, req.params.id],
+  const { CompanyIdent, Category, SubCategory, Ident } = req.body;
+  db.run(`UPDATE Company SET CompanyIdent = ?, Category = ?, SubCategory = ?, Ident = ? WHERE id = ?`,
+    [CompanyIdent, Category, SubCategory, Ident, req.params.id],
     function(err) {
       if (err) {
         return res.status(500).json({ error: err.message });

@@ -1,0 +1,31 @@
+main {
+	height: 87vh;
+	padding-top: 5vh;
+}
+
+.task-card {
+	width: 96vw;
+	margin-left: 2vw;
+	height: 85px;
+	border-radius: 10px;
+}
+
+.task-card-header {
+	padding: 0% 2.5%;
+	margin: 5px;
+	height: 20px;
+	border-radius: 5px;
+}
+
+.task-card-title {
+	font-size: 0.75rem;
+	font-weight: 600;
+}
+
+#company-view {
+	width: 96vw;
+	margin-left: 2vw;
+	height: 40vh;
+	border-radius: 10px;
+	padding: 5px;
+}
